@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 
 //const authRouter = require('./routers/authRouter');
 const employeesRouter = require('./routers/employeesRouter');
+const departmentsRouter = require('./routers/departmentsRouter');
 
 const app = express();
 const port = 8080;
@@ -18,6 +19,7 @@ app.use(express.json());
 // routers
 //app.use('/auth', authRouter);
 app.use('/employees', employeesRouter);
+app.use('/departments', departmentsRouter);
 
 
 app.listen(port, () => {

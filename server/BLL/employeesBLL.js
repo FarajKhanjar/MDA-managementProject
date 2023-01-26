@@ -10,9 +10,9 @@ const getEmployeeById = (id) => {
   return Employee.findById({ _id: id });
 };
 
-// GET - Get By Director - read & filter
-const getEmployeeByDirector = (director) => {
-  return Employee.find({ director: director });
+// GET - Get By Start Work Year - read & filter
+const getEmployeeByStartWorkYear = (startWorkYear) => {
+  return Employee.find({ startWorkYear: startWorkYear });
 };
 
 // POST - Create
@@ -37,7 +37,7 @@ const deleteEmployee = async (id) => {
 module.exports = {
   getAllEmployees,
   getEmployeeById,
-  getEmployeeByDirector,
+  getEmployeeByStartWorkYear,
   addEmployee,
   updateEmployee,
   deleteEmployee,

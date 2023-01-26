@@ -1,54 +1,54 @@
 const express = require('express');
-const employeesBLL = require('../BLL/employeesBLL');
+const departmentsBLL = require('../BLL/departmentsBLL');
 //const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
-// Entry Point 'http://localhost:8080/employees'
+// Entry Point 'http://localhost:8080/departments'
 
-// Get all employees
+// Get all departments
 router.route('/').get(async (req, res) => {
     try {
         const filters = req.query;
         console.log(filters);
-        const employees = await employeesBLL.getAllEmployees(filters);
-        res.json(employees);
+        const departments = await departmentsBLL.getAllDepartments(filters);
+        res.json(departments);
     } catch (error) {
       res.json(error);
     }
     
     });
 
-// Get employee By ID
+// Get department By ID
 router.route('/:id').get(async (req, res) => {
   try {
     const { id } = req.params;
-  const employee = await employeesBLL.getEmployeeById(id);
-  res.json(employee);
+  const department = await departmentsBLL.getDepartmentById(id);
+  res.json(department);
   } catch (error) {
     res.json(error);
   }
   
 });
 
-// Get employee By startWorkYear
-router.route('/byYear/:startWorkYear').get(async (req, res) => {
+// Get department By manager
+router.route('/byManager/:manager').get(async (req, res) => {
   try {
-    const { startWorkYear } = req.params;
-    const employee = await employeesBLL.getEmployeeByStartWorkYear(startWorkYear);
-    res.json(employee);
+    const { manager } = req.params;
+    const department = await departmentsBLL.getDepartmentByStartWorkYear(manager);
+    res.json(department);
   } catch (error) {
     res.json(error);
   }
 
 });
 
-// Add a employee
+// Add a department
 router.route('/').post(async (req, res) => {
   try {
     const obj = req.body;
     console.log(req.body);
-    const result = await employeesBLL.addEmployee(obj);
+    const result = await departmentsBLL.addDepartment(obj);
     res.json(result);
   } catch (error) {
     res.json(error);
@@ -56,12 +56,12 @@ router.route('/').post(async (req, res) => {
 
 });
 
-// Update a employee
+// Update a department
 router.route('/:id').put(async (req, res) => {
   try {
       const { id } = req.params;
   const obj = req.body;
-  const result = await employeesBLL.updateEmployee(id, obj);
+  const result = await departmentsBLL.updateDepartment(id, obj);
   res.json(result);
   } catch (error) {
     res.json("The error is: "+error.name);
@@ -69,11 +69,11 @@ router.route('/:id').put(async (req, res) => {
 
 });
 
-// Delete a employee
+// Delete a department
 router.route('/:id').delete(async (req, res) => {
   try {
       const { id } = req.params;
-  const result = await employeesBLL.deleteEmployee(id);
+  const result = await departmentsBLL.deleteDepartment(id);
   res.json(result);
   } catch (error) {
     res.json("The error is: "+error.name);
