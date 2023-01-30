@@ -40,6 +40,17 @@ router.route('/byYear/:startWorkYear').get(async (req, res) => {
   }
 });
 
+// Get employee By departmentId
+router.route('/byDep/:depId').get(async (req, res) => {
+  try {
+    const { depId } = req.params;
+    const employee = await employeesBLL.getEmployeeByDepartmentID(depId);
+    res.json(employee);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
 // Add a employee
 router.route('/').post(async (req, res) => {
   try {
