@@ -1,4 +1,6 @@
 const Department = require('../models/departmentModel');
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 // GET - Get All - Read
 const getAllDepartments = () => {
@@ -22,12 +24,53 @@ const getAllDepartments = () => {
 
 // GET - Get By Id - read
 const getDepartmentById = (id) => {
-  return Department.findById({ _id: id });
+  return Department.aggregate([
+    { 
+      $lookup :
+      {
+        from: "employees",
+        localField: "manager",
+        foreignField: "_id",
+        pipeline: [
+          {
+            $project : { "departmentID": 0 }
+          }
+        ],
+        as: "manager"
+      } 
+    },
+    {
+      $match : {
+        _id : ObjectId(id)
+      }
+    }
+  ]);
 };
 
 // GET - Get By Manager - read & filter
 const getDepartmentByManager = (manager) => {
-  return Department.find({ manager: manager });
+  console.log(manager)
+  return Department.aggregate([
+    {
+      $match : {
+        manager : ObjectId(manager)
+      }
+    },
+    { 
+      $lookup :
+      {
+        from: "employees",
+        localField: "manager",
+        foreignField: "_id",
+        pipeline: [
+          {
+            $project : { "departmentID": 0 }
+          }
+        ],
+        as: "manager"
+      } 
+    }
+  ]);
 };
 
 // POST - Create
