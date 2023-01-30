@@ -5,6 +5,7 @@ const employeeSchema = new mongoose.Schema(
     firstName: String,
     lastName: String,
     startWorkYear: Number,
+    departmentID: mongoose.Schema.Types.ObjectId
   },
   { versionKey: false }
 );
