@@ -35,7 +35,7 @@ router.route('/:id').get(async (req, res) => {
 router.route('/byManager/:manager').get(async (req, res) => {
   try {
     const { manager } = req.params;
-    const department = await departmentsBLL.getDepartmentByStartWorkYear(manager);
+    const department = await departmentsBLL.getDepartmentByManager(manager);
     res.json(department);
   } catch (error) {
     res.json(error);

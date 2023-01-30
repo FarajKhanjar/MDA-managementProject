@@ -5,7 +5,6 @@ const employeeSchema = new mongoose.Schema(
     firstName: String,
     lastName: String,
     startWorkYear: Number,
-    departmentID: String
   },
   { versionKey: false }
 );

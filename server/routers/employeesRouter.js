@@ -8,16 +8,15 @@ const router = express.Router();
 
 // Get all employees
 router.route('/').get(async (req, res) => {
-    try {
-        const filters = req.query;
-        console.log(filters);
-        const employees = await employeesBLL.getAllEmployees(filters);
-        res.json(employees);
-    } catch (error) {
-      res.json(error);
-    }
-    
-    });
+  try {
+      const filters = req.query;
+      console.log(filters);
+      const employees = await employeesBLL.getAllEmployees(filters);
+      res.json(employees);
+  } catch (error) {
+    res.json(error);
+  }  
+});
 
 // Get employee By ID
 router.route('/:id').get(async (req, res) => {
@@ -27,8 +26,7 @@ router.route('/:id').get(async (req, res) => {
   res.json(employee);
   } catch (error) {
     res.json(error);
-  }
-  
+  }  
 });
 
 // Get employee By startWorkYear
@@ -40,7 +38,6 @@ router.route('/byYear/:startWorkYear').get(async (req, res) => {
   } catch (error) {
     res.json(error);
   }
-
 });
 
 // Add a employee
@@ -53,7 +50,6 @@ router.route('/').post(async (req, res) => {
   } catch (error) {
     res.json(error);
   }
-
 });
 
 // Update a employee
@@ -66,7 +62,6 @@ router.route('/:id').put(async (req, res) => {
   } catch (error) {
     res.json("The error is: "+error.name);
   }
-
 });
 
 // Delete a employee
@@ -78,7 +73,6 @@ router.route('/:id').delete(async (req, res) => {
   } catch (error) {
     res.json("The error is: "+error.name);
   }
-
 });
 
 module.exports = router;

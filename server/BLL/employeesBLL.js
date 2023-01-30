@@ -1,9 +1,45 @@
 const Employee = require('../models/employeeModel');
 
+
 // GET - Get All - Read
-const getAllEmployees = (filters) => {
-  return Employee.find(filters);
-};
+const getAllEmployees = (filters) => { 
+  //Employee.find(filters);
+  return Employee.aggregate(
+    [
+      { $lookup :
+        {
+          from: "departments",
+          localField: "departmentID",
+          foreignField: "_id",
+          pipeline: [
+            {
+              $lookup :
+              {
+                from: "employees",
+                localField: "manager",
+                foreignField: "_id",
+                pipeline: [
+                  {
+                    $project : { "departmentID": 0 }
+                  }
+                ],
+                as: "manager"
+              }
+            }
+          ],
+          as: "department"
+        } 
+      },
+      { 
+        $project : { "departmentID": 0 } 
+      }
+  //  ,{
+  //   $match :  {
+  //     startWorkYear : 2014
+  //   } 
+  //  }
+])
+}
 
 // GET - Get By Id - read
 const getEmployeeById = (id) => {

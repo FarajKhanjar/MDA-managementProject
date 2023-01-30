@@ -1,8 +1,23 @@
 const Department = require('../models/departmentModel');
 
 // GET - Get All - Read
-const getAllDepartments = (filters) => {
-  return Department.find(filters);
+const getAllDepartments = () => {
+  return Department.aggregate([
+    { 
+      $lookup :
+      {
+        from: "employees",
+        localField: "manager",
+        foreignField: "_id",
+        pipeline: [
+          {
+            $project : { "departmentID": 0 }
+          }
+        ],
+        as: "manager"
+      } 
+    }
+  ]);
 };
 
 // GET - Get By Id - read
