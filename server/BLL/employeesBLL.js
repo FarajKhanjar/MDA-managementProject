@@ -1,6 +1,5 @@
 const Employee = require('../models/employeeModel');
 
-
 // GET - Get All - Read
 const getAllEmployees = (filters) => { 
   //Employee.find(filters);
