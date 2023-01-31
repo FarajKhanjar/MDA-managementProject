@@ -1,4 +1,5 @@
 const Employee = require('../models/employeeModel');
+const EmployeeShift = require('../models/employeeShiftModel');
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -37,7 +38,7 @@ const getAllEmployees = (filters) => {
       }
       , { $lookup :
         {
-          from: "employeeShifts",
+          from: "employeeshifts",
           localField: "_id",
           foreignField: "employeeID",
           pipeline: [
@@ -101,7 +102,7 @@ const getEmployeeById = (id) => {
         $project : { "departmentID": 0 } 
       } , { $lookup :
         {
-          from: "employeeShifts",
+          from: "employeeshifts",
           localField: "_id",
           foreignField: "employeeID",
           pipeline: [
@@ -168,7 +169,7 @@ const getEmployeeByStartWorkYear = (year) => {
         $project : { "departmentID": 0 } 
       } , { $lookup :
         {
-          from: "employeeShifts",
+          from: "employeeshifts",
           localField: "_id",
           foreignField: "employeeID",
           pipeline: [
@@ -236,7 +237,7 @@ const getEmployeeByDepartmentID = (departmentId) => {
       // }
       , { $lookup :
         {
-          from: "employeeShifts",
+          from: "employeeshifts",
           localField: "_id",
           foreignField: "employeeID",
           pipeline: [
@@ -286,6 +287,8 @@ const updateEmployee = async (id, obj) => {
 // DELETE - Delete
 const deleteEmployee = async (id) => {
   await Employee.findByIdAndDelete(id);
+  console.log(EmployeeShift.employeeID);
+  await EmployeeShift.deleteMany({ employeeID: id });
   return 'Deleted!';
 };
 
