@@ -35,6 +35,32 @@ const getAllEmployees = (filters) => {
       ,{ 
         $project : { "departmentID": 0 } 
       }
+      , { $lookup :
+        {
+          from: "employeeShifts",
+          localField: "_id",
+          foreignField: "employeeID",
+          pipeline: [
+            {
+              $lookup :
+              {
+                from: "shifts",
+                localField: "shiftID",
+                foreignField: "_id",
+                pipeline: [
+                  {
+                    $project : { "department": 0 }
+                  }
+                ],
+                as: "shift"
+              }
+            } , {
+              $project : { "_id": 0 , "employeeID": 0 , "shiftID": 0}
+            }
+          ],
+          as: "shifts"
+        } 
+      }
   //  ,{
   //   $match :  {
   //     startWorkYear : 2014
@@ -73,6 +99,31 @@ const getEmployeeById = (id) => {
       }
       ,{ 
         $project : { "departmentID": 0 } 
+      } , { $lookup :
+        {
+          from: "employeeShifts",
+          localField: "_id",
+          foreignField: "employeeID",
+          pipeline: [
+            {
+              $lookup :
+              {
+                from: "shifts",
+                localField: "shiftID",
+                foreignField: "_id",
+                pipeline: [
+                  {
+                    $project : { "department": 0 }
+                  }
+                ],
+                as: "shift"
+              }
+            } , {
+              $project : { "_id": 0 , "employeeID": 0 , "shiftID": 0}
+            }
+          ],
+          as: "shifts"
+        } 
       }
       ,{
         $match :  
@@ -115,6 +166,31 @@ const getEmployeeByStartWorkYear = (year) => {
       }
       ,{ 
         $project : { "departmentID": 0 } 
+      } , { $lookup :
+        {
+          from: "employeeShifts",
+          localField: "_id",
+          foreignField: "employeeID",
+          pipeline: [
+            {
+              $lookup :
+              {
+                from: "shifts",
+                localField: "shiftID",
+                foreignField: "_id",
+                pipeline: [
+                  {
+                    $project : { "department": 0 }
+                  }
+                ],
+                as: "shift"
+              }
+            } , {
+              $project : { "_id": 0 , "employeeID": 0 , "shiftID": 0}
+            }
+          ],
+          as: "shifts"
+        } 
       }
       ,{
         $match :  
@@ -158,6 +234,32 @@ const getEmployeeByDepartmentID = (departmentId) => {
       // ,{ 
       //   $project : { "departmentID": 0 } 
       // }
+      , { $lookup :
+        {
+          from: "employeeShifts",
+          localField: "_id",
+          foreignField: "employeeID",
+          pipeline: [
+            {
+              $lookup :
+              {
+                from: "shifts",
+                localField: "shiftID",
+                foreignField: "_id",
+                pipeline: [
+                  {
+                    $project : { "department": 0 }
+                  }
+                ],
+                as: "shift"
+              }
+            } , {
+              $project : { "_id": 0 , "employeeID": 0 , "shiftID": 0}
+            }
+          ],
+          as: "shifts"
+        } 
+      }
       ,{
         $match :  
         {
