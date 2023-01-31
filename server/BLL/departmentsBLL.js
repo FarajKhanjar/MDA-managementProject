@@ -18,6 +18,20 @@ const getAllDepartments = () => {
         ],
         as: "manager"
       } 
+    }, 
+    { 
+      $lookup :
+      {
+        from: "employees",
+        localField: "_id",
+        foreignField: "departmentID",
+        pipeline: [
+          {
+            $project : { "departmentID": 0}
+          }
+        ],
+        as: "employees"
+      } 
     }
   ]);
 };
