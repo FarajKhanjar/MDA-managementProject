@@ -40,7 +40,7 @@ const getAllShifts = (filters) => {
         foreignField: "_id",
         pipeline: [
           { 
-            $project : { "department": 0} 
+            $project : { "manager": 0} 
           }
         ],
         as: "department"
@@ -86,7 +86,7 @@ const getShiftById = (id) => {
         foreignField: "_id",
         pipeline: [
           { 
-            $project : { "department": 0} 
+            $project : { "manager": 0} 
           }
         ],
         as: "department"
@@ -143,7 +143,7 @@ const getShiftByDepartment = (department) => {
         foreignField: "_id",
         pipeline: [
           { 
-            $project : { "department": 0} 
+            $project : { "manager": 0} 
           }
         ],
         as: "department"

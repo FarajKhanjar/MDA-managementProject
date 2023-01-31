@@ -4,7 +4,8 @@ const shiftSchema = new mongoose.Schema(
   {
     date: Date,
     startingHour: String,
-    endingHour: String
+    endingHour: String,
+    department: mongoose.Schema.Types.ObjectId
   },
   { versionKey: false }
 );
