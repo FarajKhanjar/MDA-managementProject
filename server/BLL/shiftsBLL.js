@@ -1,4 +1,5 @@
 const Shift = require('../models/shiftModel');
+const EmployeeShift = require('../models/employeeShiftModel');
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -9,7 +10,7 @@ const getAllShifts = (filters) => {
     { 
       $lookup :
       {
-        from: "employeeShifts",
+        from: "employeeshifts",
         localField: "_id",
         foreignField: "shiftID",
         pipeline: [
@@ -27,7 +28,7 @@ const getAllShifts = (filters) => {
             }
           }, 
           {
-            $project : { "shiftID": 0 , "employeeID": 0 , "_id": 0}
+            $project : { "shiftID": 0 , "employeeID": 0}
           }
         ],
         as: "employeesAtShift"
@@ -55,7 +56,7 @@ const getShiftById = (id) => {
     { 
       $lookup :
       {
-        from: "employeeShifts",
+        from: "employeeshifts",
         localField: "_id",
         foreignField: "shiftID",
         pipeline: [
@@ -73,7 +74,7 @@ const getShiftById = (id) => {
             }
           }, 
           {
-            $project : { "shiftID": 0 , "employeeID": 0 , "_id": 0}
+            $project : { "shiftID": 0 , "employeeID": 0}
           }
         ],
         as: "employeesAtShift"
@@ -112,7 +113,7 @@ const getShiftByDepartment = (department) => {
     { 
       $lookup :
       {
-        from: "employeeShifts",
+        from: "employeeshifts",
         localField: "_id",
         foreignField: "shiftID",
         pipeline: [
@@ -130,7 +131,7 @@ const getShiftByDepartment = (department) => {
             }
           }, 
           {
-            $project : { "shiftID": 0 , "employeeID": 0 , "_id": 0}
+            $project : { "shiftID": 0 , "employeeID": 0}
           }
         ],
         as: "employeesAtShift"
@@ -159,9 +160,22 @@ const addShift = async (obj) => {
   return 'Created!';
 };
 
+// POST - Create employeeShift
+const addEmployeeShift = async (obj) => {
+  const currEmployeeShift = new EmployeeShift(obj);
+  await currEmployeeShift.save();
+  return 'Created!';
+};
+
 // PUT - Update
 const updateShift = async (id, obj) => {
   await Shift.findByIdAndUpdate(id, obj);
+  return 'Updated!';
+};
+
+// PUT - Update employeeShift
+const updateEmployeeShift = async (id, obj) => {
+  await EmployeeShift.findByIdAndUpdate(id, obj);
   return 'Updated!';
 };
 
@@ -171,11 +185,20 @@ const deleteShift = async (id) => {
   return 'Deleted!';
 };
 
+// DELETE - Delete employeeShift
+const deleteEmployeeShift = async (id) => {
+  await EmployeeShift.findByIdAndDelete(id);
+  return 'Deleted!';
+};
+
 module.exports = {
   getAllShifts,
   getShiftById,
   getShiftByDepartment,
   addShift,
+  addEmployeeShift,
   updateShift,
+  updateEmployeeShift,
   deleteShift,
+  deleteEmployeeShift
 };

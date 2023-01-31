@@ -56,6 +56,19 @@ router.route('/').post(async (req, res) => {
 
 });
 
+// Add a employeeShift
+router.route('/addEmp').post(async (req, res) => {
+  try {
+    const obj = req.body;
+    console.log(req.body);
+    const result = await shiftsBLL.addEmployeeShift(obj);
+    res.json(result);
+  } catch (error) {
+    res.json(error);
+  }
+
+});
+
 // Update a shift
 router.route('/:id').put(async (req, res) => {
   try {
@@ -69,11 +82,36 @@ router.route('/:id').put(async (req, res) => {
 
 });
 
+// Update a employeeShift
+router.route('/updateEmp/:id').put(async (req, res) => {
+  try {
+      const { id } = req.params;
+  const obj = req.body;
+  const result = await shiftsBLL.updateEmployeeShift(id, obj);
+  res.json(result);
+  } catch (error) {
+    res.json("The error is: "+error.name);
+  }
+
+});
+
 // Delete a shift
 router.route('/:id').delete(async (req, res) => {
   try {
       const { id } = req.params;
   const result = await shiftsBLL.deleteShift(id);
+  res.json(result);
+  } catch (error) {
+    res.json("The error is: "+error.name);
+  }
+
+});
+
+// Delete a employeeShift
+router.route('/deleteEmp/:id').delete(async (req, res) => {
+  try {
+      const { id } = req.params;
+  const result = await shiftsBLL.deleteEmployeeShift(id);
   res.json(result);
   } catch (error) {
     res.json("The error is: "+error.name);
