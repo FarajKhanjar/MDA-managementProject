@@ -53,7 +53,21 @@ const getDepartmentById = (id) => {
         as: "manager"
       } 
     },
-    {
+    { 
+      $lookup :
+      {
+        from: "employees",
+        localField: "_id",
+        foreignField: "departmentID",
+        pipeline: [
+          {
+            $project : { "departmentID": 0}
+          }
+        ],
+        as: "employees"
+      } 
+    } 
+    , {
       $match : {
         _id : ObjectId(id)
       }
@@ -82,6 +96,20 @@ const getDepartmentByManager = (manager) => {
           }
         ],
         as: "manager"
+      } 
+    }, 
+    { 
+      $lookup :
+      {
+        from: "employees",
+        localField: "_id",
+        foreignField: "departmentID",
+        pipeline: [
+          {
+            $project : { "departmentID": 0}
+          }
+        ],
+        as: "employees"
       } 
     }
   ]);
