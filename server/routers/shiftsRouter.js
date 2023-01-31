@@ -31,6 +31,18 @@ router.route('/:id').get(async (req, res) => {
   
 });
 
+// Get shift By manager
+// router.route('/byManager/:manager').get(async (req, res) => {
+//   try {
+//     const { manager } = req.params;
+//     const shift = await shiftsBLL.getShiftByManager(manager);
+//     res.json(shift);
+//   } catch (error) {
+//     res.json(error);
+//   }
+
+// });
+
 // Add a shift
 router.route('/').post(async (req, res) => {
   try {
