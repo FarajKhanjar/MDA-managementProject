@@ -1,0 +1,96 @@
+<html>
+    <body>
+        <h1 style="text-align: center; color:crimson">MDA management service</h1>
+        <table id="menuTable" style="margin-left:auto;margin-right:auto;">
+            <tr>
+                <td>
+                    <button onclick="getEmployeesData()" id="employeesDataButton">Get all employees</button>
+                </td>
+                <td>
+                    <button onclick="getDepartmentsData()" id="departmentsDataButton">Get all departments</button>
+                </td>
+            </tr>
+        </table>
+        <br/>
+
+        <table id="employeesTable" border="1" style="visibility:hidden; margin-left:auto;margin-right:auto; background-color:blanchedalmond;">
+            <thead style="color:brown; font-weight: bold;">
+                <th id="nameOfemployee">First Name<br/></th>
+                <th id="lastNameOfemployee">Last Name<br/></th>
+                <th id="startWorkYearOfemployee">Start work year<br/></th>
+                <th id="department">Department<br/></th>
+                <!-- <th id="deleteTD">Delete this employee<br/></th>
+                <th id="updateTD">Update this employee<br/></th> -->
+                </tr>
+            </thead>
+            <tbody id="employeesData" style="text-align: center;"></tbody>
+        </table> 
+    </body>
+
+    <script>
+        const empURL = 'http://localhost:8080/employees';
+
+async function getEmployeesData() {
+    
+    // clearTable();
+
+    // const accessToken = sessionStorage['accessToken'];
+    // const empResp = await fetch(empURL, {
+    //     headers: {'x-access-token': accessToken},
+    // });
+
+    var obj = document.getElementById('employeesTable')
+    obj.style.visibility = 'visible'
+
+    const empResp = await fetch(empURL);
+    const empData = await empResp.json();
+    console.table(empData);
+
+
+    for (i = empData.length-1; i >= 0; i--) {
+      let currntID = empData[i]._id;
+      let firstName = empData[i].firstName;
+      let lastName = empData[i].lastName;
+      let startWorkYear = empData[i].startWorkYear;
+
+      const department = empData[i].department;
+      let depName = department[0].name;
+    //   let depJson = JSON.Parse(department);
+    //   let depName = depJson.name;
+    // console.log("type is: " + typeof(department));
+    // console.table(department);
+    // console.log(department.length);
+
+    //    for (j = 0; j <department.length; j++) {
+    //     depName = department[j].name;
+    //     console.log(depName);
+    //    }
+
+      var tableRow = document.getElementById("employeesData");
+      var row = tableRow.insertRow(0);
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+      var cell4 = row.insertCell(3);
+    //   var cell4 = row.insertCell(3);
+    //   var cell5 = row.insertCell(4); 
+      cell1.innerHTML = firstName;
+      cell2.innerHTML = lastName;
+      cell3.innerHTML = startWorkYear;
+      cell4.innerHTML = depName;
+      
+    //   let deleteTD = `<input type='checkbox' onclick='deleteEmployee(this)' value="${currntID}">`;
+    //   console.log(deleteTD)
+    //   cell4.innerHTML = deleteTD;
+
+    //   let updateTD = `<input type='radio' onclick='updateEmployee(this)' value="${currntID}" name="updating">`;
+    //   console.log(updateTD)
+    //   cell5.innerHTML = updateTD;
+      
+  }
+
+//   document.getElementById("hideDataButton").disabled = false;
+//   document.getElementById("getDataButton").disabled = true;
+}
+    </script>
+</html>
