@@ -1,6 +1,16 @@
 <html style="background-color: whitesmoke;">
     <body onload="getData()">
         <h1 style="text-align: center; color:crimson">Employee Shifts</h1>
+        <table id="menuTable" style="margin-left:auto;margin-right:auto;">
+            <tr>
+                <td>
+                    <button onclick="addShift()" id="addShift" title="click to add">Add shift</button>
+                </td>
+                <td>
+                    <button onclick="returnPageButton()" id="mainPageButton">Return Main Page</button>
+                </td>
+            </tr>
+        </table>
         <table id="shiftsTable" border="1" style="margin-left:auto;margin-right:auto; background-color:blanchedalmond;">
             <tr style="text-align: center">
                 <div>
@@ -19,15 +29,6 @@
             </thead>
             <tbody id="shiftsData" style="text-align: center;"></tbody>
         </table> 
-
-        </br>
-        <table id="menuTable" style="margin-left:auto;margin-right:auto;">
-            <tr>
-                <td>
-                    <button onclick="returnPageButton()" id="mainPageButton">Return Main Page</button>
-                </td>
-            </tr>
-        </table> 
     </body>
     
     <script>
@@ -36,6 +37,20 @@
         async function returnPageButton() {
             window.location.href = './welcome.html';
         }
+
+        async function addShift() {
+
+            const idValue = localStorage.getItem('sendEmpIdToShiftsPage');
+            //console.log(idValue);  
+                const resp = await fetch(url+"/"+idValue);
+                const data = await resp.json();
+                    let departmenID = data[0].department[0]._id; 
+                    console.log(departmenID);
+
+                    localStorage.setItem('sendDepIdToAddPage', departmenID);
+                    window.location.href = './addShift.html';
+                }
+
         
         async function getData() {
             
