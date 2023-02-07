@@ -9,6 +9,9 @@
                 <td>
                     <button onclick="getDepartmentsData()" id="departmentsDataButton">Get all departments</button>
                 </td>
+                <td>
+                    <button onclick="clearPage()" id="mainPageButton" disabled>Main Page</button>
+                </td>
             </tr>
         </table>
         <br/>
@@ -27,7 +30,6 @@
             <tbody id="employeesData" style="text-align: center;"></tbody>
         </table> 
 
-
         <table id="departmentsTable" border="1" style="visibility:hidden; margin-left:auto;margin-right:auto; background-color:blanchedalmond;">
             <thead style="color:brown; font-weight: bold;">
                 <th id="nameOfdepartment">Department Name<br/></th>
@@ -44,18 +46,83 @@
     <script>
         const empURL = 'http://localhost:8080/employees';
         const depURL = 'http://localhost:8080/departments';
+        
+        async function clearPage() {
 
-async function getEmployeesData() {
+            var tableData = document.getElementById("employeesData");
+            tableData.innerHTML="";
+
+            var tableData = document.getElementById("departmentsData");
+            tableData.innerHTML="";
+
+            var obj = document.getElementById('employeesTable');
+            obj.style.visibility = 'hidden';
+
+            var obj = document.getElementById('departmentsTable');
+            obj.style.visibility = 'hidden';
+ 
+            var obj = document.getElementById('employeesDataButton');
+            obj.style.visibility = 'visible';
+            obj.disabled = false;
+
+            var obj = document.getElementById('departmentsDataButton');
+            obj.style.visibility = 'visible';
+            obj.disabled = false;
+
+            var obj = document.getElementById('mainPageButton');
+            //obj.style.visibility = 'hidden';
+            obj.disabled = true;
+
+            
+            // document.getElementById("hideDataButton").disabled = true;
+            // document.getElementById("getDataButton").disabled = false;
+            
+            // var tableData = document.getElementById("marvelMovies");
+            // tableData.innerHTML="";
+
+           // title.innerHTML="";
+            //hideData();
+
+            // var form = document.getElementById('form');
+            // form.reset();
+
+            // var obj = document.getElementById('AddToData')
+            // obj.style.visibility = 'hidden'
+            // obj.style.display = 'none'
+
+            // var obj = document.getElementById('searchingByIdTable')
+            // obj.style.visibility = 'hidden'
+            // obj.style.display = 'none'
+
+            // var obj = document.getElementById('searchingByDirectorTable')
+            // obj.style.visibility = 'hidden'
+            // obj.style.display = 'none'
+
+            // var obj = document.getElementById('updateData')
+            // obj.style.visibility = 'hidden'
+            // obj.style.display = 'none'
+
+        }
+
+        async function getEmployeesData() {
     
-    // clearTable();
+            clearPage();
 
     // const accessToken = sessionStorage['accessToken'];
     // const empResp = await fetch(empURL, {
     //     headers: {'x-access-token': accessToken},
     // });
 
+    var obj = document.getElementById('mainPageButton')
+    //obj.style.visibility = 'visible';
+    obj.disabled = false;
+
+    var obj = document.getElementById('employeesDataButton')
+    //obj.style.visibility = 'hidden';
+    obj.disabled = true;
+
     var obj = document.getElementById('employeesTable')
-    obj.style.visibility = 'visible'
+    obj.style.visibility = 'visible';
 
     const empResp = await fetch(empURL);
     const empData = await empResp.json();
@@ -129,15 +196,24 @@ async function getEmployeesData() {
     
 async function getDepartmentsData() {
     
-    // clearTable();
+     clearPage();
 
     // const accessToken = sessionStorage['accessToken'];
     // const empResp = await fetch(empURL, {
     //     headers: {'x-access-token': accessToken},
     // });
 
+    var obj = document.getElementById('mainPageButton')
+    //obj.style.visibility = 'visible';
+    obj.disabled = false;
+
+    var obj = document.getElementById('departmentsDataButton')
+    //obj.style.visibility = 'hidden';
+    obj.disabled = true;
+
     var obj = document.getElementById('departmentsTable')
     obj.style.visibility = 'visible'
+
 
     const depResp = await fetch(depURL);
     const depData = await depResp.json();
