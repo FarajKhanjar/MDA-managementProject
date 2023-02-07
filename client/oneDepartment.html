@@ -1,0 +1,75 @@
+<html style="background-color: whitesmoke;">
+    <body onload="getData()">
+        <h1 style="text-align: center; color:blue">Department Details</h1>
+
+        <table id="departmentsTable" border="1" style="margin-left:auto;margin-right:auto; background-color:blanchedalmond;">
+            <thead style="color:green; font-weight: bold;">
+                <th id="nameOfdepartment">Department Name<br/></th>
+                <th id="manager">Manager<br/></th>
+                <th id="employeesNum">Employees Number<br/></th>
+                <!-- <th id="deleteTD">Delete this employee<br/></th>
+                <th id="updateTD">Update this employee<br/></th> -->
+                </tr>
+            </thead>
+            <tbody id="departmentsData" style="text-align: center;"></tbody>
+        </table> 
+    </body>
+    
+    <script>
+        const url = 'http://localhost:8080/departments';
+        
+        async function getData() {
+            
+            const idValue = localStorage.getItem('sendDepIdToAnotherPage');
+            console.log(idValue);          
+            
+            if(idValue!="") {
+                
+                const resp = await fetch(url+"/"+idValue);
+                const data = await resp.json();
+                if(data) {
+                    console.table(data);
+                    
+                    var tableRow = document.getElementById("departmentsData");
+                    let currntID = data[0]._id;
+                    let depName = data[0].name;
+                    
+                    var row = tableRow.insertRow(0);
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+                    
+                    let manager = data[0].manager;
+                    let managerName = manager[0].firstName+ " " +manager[0].lastName;
+                    
+                    let employees = data[0].employees;
+                    let employeesNum = employees.length;
+                    
+                    //   var cell4 = row.insertCell(3);
+                    //   var cell5 = row.insertCell(4); 
+                    
+                    cell1.innerHTML = depName;
+                    cell2.innerHTML = `<a id='goToManagerPage' href='./oneManager.html'>${managerName}</a>`;;
+                    cell3.innerHTML = `<a href='./employeeShifts.html'>${employeesNum}</a>`;
+                    
+                    var link_1 = document.getElementById("goToManagerPage");
+                    link_1.addEventListener('click', WhichLinkWasClicked);
+                    
+                    function WhichLinkWasClicked(evt) {
+                        evt.preventDefault();
+                        console.log(managerID+" clicked!")
+                        let managerID = manager[0]._id;
+                        localStorage.setItem('sendManagerIdToAnotherPage', managerID);
+                        window.location.href = './oneManager.html';
+                    }
+                
+                } else {
+                    title.innerHTML = "There is no such employee in this ID: { " + id + " }";
+                }
+            } else {
+                console.log("You didnt enter id employee yet.")
+            }
+        }
+
+    </script>
+</html>

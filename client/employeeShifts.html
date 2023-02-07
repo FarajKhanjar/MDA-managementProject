@@ -1,0 +1,20 @@
+<html style="background-color: whitesmoke;">
+    <body onload="getData()">
+        <h1 style="text-align: center; color:crimson">dep</h1>
+    </body>
+    
+    <script>
+        const url = 'http://localhost:8080/employees';
+        
+        async function getData() {
+            
+            const idValue = localStorage.getItem('sendDepIdToAnotherPage');
+            console.log(idValue);          
+            
+            const resp = await fetch(url+"/"+idValue);
+            const data = await resp.json();
+            console.table(data);
+}
+
+    </script>
+</html>
