@@ -13,12 +13,25 @@
                 </tr>
             </thead>
             <tbody id="employeesData" style="text-align: center;"></tbody>
+        </table>
+
+    </br>
+        <table id="menuTable" style="margin-left:auto;margin-right:auto;">
+            <tr>
+                <td>
+                    <button onclick="returnPageButton()" id="mainPageButton">Return Main Page</button>
+                </td>
+            </tr>
         </table> 
     </body>
     
     <script>
         const url = 'http://localhost:8080/employees';
-        
+
+        async function returnPageButton() {
+            window.location.href = './welcome.html';
+        }
+          
         async function getData() {
             
             const idValue = localStorage.getItem('sendManagerIdToAnotherPage');
