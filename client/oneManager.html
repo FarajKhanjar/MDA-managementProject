@@ -52,18 +52,29 @@
                     cell2.innerHTML = data[0].lastName;
                     cell3.innerHTML = data[0].startWorkYear;
                     cell4.innerHTML = `<a id='goToDepPage' href='./oneDepartment.html'>${depName}</a>`;;
-                    cell5.innerHTML = `<a href='./employeeShifts.html'>${shiftsNum}</a>`;
+                    cell5.innerHTML = `<a id='goToShiftsPage' href='./employeeShifts.html'>${shiftsNum}</a>`;
                     
                     var link_1 = document.getElementById("goToDepPage");
-                    link_1.addEventListener('click', WhichLinkWasClicked);
+                    link_1.addEventListener('click', WhichLink1WasClicked);
+
+                    var link_2 = document.getElementById("goToShiftsPage");
+                    link_2.addEventListener('click', WhichLink2WasClicked);
                     
-                    function WhichLinkWasClicked(evt) {
+                    function WhichLink1WasClicked(evt) {
                         evt.preventDefault();
                         let depID = department[0]._id;
                         console.log(depID+" - "+depName +" clicked!");
                         localStorage.setItem('sendDepIdToAnotherPage', depID);
                         window.location.href = './oneDepartment.html';
                     }
+
+                    function WhichLink2WasClicked(evt) {
+                        evt.preventDefault();
+                        console.log(idValue +" clicked!");
+                        localStorage.setItem('sendEmpIdToShiftsPage', idValue);
+                        window.location.href = './employeeShifts.html';
+                    }
+
                 } else {
                     title.innerHTML = "There is no such employee in this ID: { " + id + " }";
                 }

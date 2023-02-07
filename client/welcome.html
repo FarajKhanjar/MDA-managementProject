@@ -90,17 +90,26 @@ async function getEmployeesData() {
       cell5.innerHTML = `<a id='goToShiftsPage' href='./employeeShifts.html'>${shiftsNum}</a>`;
       
       var link_1 = document.getElementById("goToDepPage");
-      link_1.addEventListener('click', WhichLinkWasClicked);
+      link_1.addEventListener('click', WhichLink1WasClicked);
+
+      var link_2 = document.getElementById("goToShiftsPage");
+      link_2.addEventListener('click', WhichLink2WasClicked);
       
-      function WhichLinkWasClicked(evt) {
+      function WhichLink1WasClicked(evt) {
         evt.preventDefault();
         let depID = department[0]._id;
         console.log("clicked!")
         console.log(depID)
         localStorage.setItem('sendDepIdToAnotherPage', depID);
         window.location.href = './oneDepartment.html';
+    }
 
-		}
+    function WhichLink2WasClicked(evt) {
+        evt.preventDefault();
+        console.log(currntID+ " - clicked!")
+        localStorage.setItem('sendEmpIdToShiftsPage', currntID);
+        window.location.href = './employeeShifts.html';
+    }
 
 }
 
