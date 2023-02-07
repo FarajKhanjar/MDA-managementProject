@@ -63,8 +63,11 @@
                         
                         let currntID = currShift[0]._id;
                         console.log(currntID);
+
                         let date = currShift[0].date;
-                        console.log(date);
+                        var shortDate = date.slice(0, 10);
+                        //console.log(date);
+                        //console.log(shortDate);
                         let startingHour = currShift[0].startingHour;
                         let endingHour = currShift[0].endingHour;
                         
@@ -76,7 +79,7 @@
                         var cell4 = row.insertCell(3);
                         
                         cell1.innerHTML = shiftsNum-i;
-                        cell2.innerHTML = date;
+                        cell2.innerHTML = shortDate;
                         cell3.innerHTML = startingHour;
                         cell4.innerHTML = endingHour;
                     }
@@ -86,18 +89,6 @@
                 }
             } 
         }
-       
-//        var link_1 = document.getElementById("goToDepPage");
-//        link_1.addEventListener('click', WhichLinkWasClicked);
-       
-//        function WhichLinkWasClicked(evt) {
-//            evt.preventDefault();
-//            let depID = department[0]._id;
-//            console.log(depID+" - "+depName +" clicked!");
-//            localStorage.setItem('sendDepIdToAnotherPage', depID);
-//            window.location.href = './oneDepartment.html';
-//        }
-//    }
 
     </script>
 </html>
