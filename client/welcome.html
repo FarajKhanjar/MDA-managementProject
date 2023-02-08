@@ -38,7 +38,7 @@
                 <th id="nameOfdepartment">Department Name<br/></th>
                 <th id="manager">Manager<br/></th>
                 <th id="employeesNum">Employees Number<br/></th>
-                <!-- <th id="deleteTD">Delete this employee<br/></th> -->
+                <th id="deleteTD">Delete this department<br/></th>
                 <!-- <th id="updateTD">Update this employee<br/></th> -->
                 </tr>
             </thead>
@@ -87,8 +87,6 @@
             // const empResp = await fetch(empURL, {
             //     headers: {'x-access-token': accessToken},
             // });
-
-
 
             var obj = document.getElementById('mainPageButton')
             //obj.style.visibility = 'visible';
@@ -163,89 +161,83 @@
             }
         }
     
-async function getDepartmentsData() {
-    
-     clearPage();
+        
+        async function getDepartmentsData() {
+            
+            clearPage();
 
-    // const accessToken = sessionStorage['accessToken'];
-    // const empResp = await fetch(empURL, {
-    //     headers: {'x-access-token': accessToken},
-    // });
+            // const accessToken = sessionStorage['accessToken'];
+            // const empResp = await fetch(empURL, {
+            // headers: {'x-access-token': accessToken},
+            // });
 
-    var obj = document.getElementById('mainPageButton')
-    //obj.style.visibility = 'visible';
-    obj.disabled = false;
+            var obj = document.getElementById('mainPageButton')
+            //obj.style.visibility = 'visible';
+            obj.disabled = false;
 
-    var obj = document.getElementById('departmentsDataButton')
-    //obj.style.visibility = 'hidden';
-    obj.disabled = true;
+            var obj = document.getElementById('departmentsDataButton')
+            //obj.style.visibility = 'hidden';
+            obj.disabled = true;
 
-    var obj = document.getElementById('departmentsTable')
-    obj.style.visibility = 'visible'
+            var obj = document.getElementById('departmentsTable')
+            obj.style.visibility = 'visible'
+            
+            const depResp = await fetch(depURL);
+            const depData = await depResp.json();
+            console.table(depData);
+            
+            for (i = depData.length-1; i >= 0; i--) {
+                let currntID = depData[i]._id;
+                let depName = depData[i].name;
+                
+                let manager = depData[i].manager;
+                console.log(manager);
+                let managerName = manager[0].firstName+ " " +manager[0].lastName;
+                
+                let employees = depData[i].employees;
+                let employeesNum = employees.length;
+                
+                var tableRow = document.getElementById("departmentsData");
+                var row = tableRow.insertRow(0);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                
+                cell1.innerHTML = depName;
+                cell2.innerHTML = `<a id='goToManagerPage' href='./oneManager.html'>${managerName}</a>`;;
+                cell3.innerHTML = `<a id='goToEmployeesPage' href='./departmentEmployees.html'>${employeesNum}</a>`;
 
-
-    const depResp = await fetch(depURL);
-    const depData = await depResp.json();
-    console.table(depData);
-
-
-    for (i = depData.length-2; i >= 0; i--) {
-      let currntID = depData[i]._id;
-      let depName = depData[i].name;
-
-      let manager = depData[i].manager;
-      console.log(manager);
-      let managerName = manager[0].firstName+ " " +manager[0].lastName;
-
-      let employees = depData[i].employees;
-      let employeesNum = employees.length;
-
-      var tableRow = document.getElementById("departmentsData");
-      var row = tableRow.insertRow(0);
-      var cell1 = row.insertCell(0);
-      var cell2 = row.insertCell(1);
-      var cell3 = row.insertCell(2);
-
-      cell1.innerHTML = depName;
-      cell2.innerHTML = `<a id='goToManagerPage' href='./oneManager.html'>${managerName}</a>`;;
-      cell3.innerHTML = `<a id='goToEmployeesPage' href='./departmentEmployees.html'>${employeesNum}</a>`;
-
-      var link_1 = document.getElementById("goToManagerPage");
-      link_1.addEventListener('click', WhichLink1WasClicked);
-      
-      var link_2 = document.getElementById("goToEmployeesPage");
-      link_2.addEventListener('click', WhichLink2WasClicked);
-
-      function WhichLink1WasClicked(evt) {
-        evt.preventDefault();
-        console.log("clicked!")
-        let managerID = manager[0]._id;
-        console.log(managerID)
-        localStorage.setItem('sendManagerIdToAnotherPage', managerID);
-        window.location.href = './oneManager.html';
-	}
-
-    function WhichLink2WasClicked(evt) {
-        evt.preventDefault();
-        console.log(currntID+" clicked!")
-        localStorage.setItem('sendDepIdToEmpsPage', currntID);
-        window.location.href = './departmentEmployees.html';
-    }
-
-    //   let deleteTD = `<input type='checkbox' onclick='deleteEmployee(this)' value="${currntID}">`;
-    //   console.log(deleteTD)
-    //   cell4.innerHTML = deleteTD;
-
-    //   let updateTD = `<input type='radio' onclick='updateEmployee(this)' value="${currntID}" name="updating">`;
-    //   console.log(updateTD)
-    //   cell5.innerHTML = updateTD;
-      
-  }
-
-//   document.getElementById("hideDataButton").disabled = false;
-//   document.getElementById("getDataButton").disabled = true;
-
-}
+                var link_1 = document.getElementById("goToManagerPage");
+                link_1.addEventListener('click', WhichLink1WasClicked);
+                
+                var link_2 = document.getElementById("goToEmployeesPage");
+                link_2.addEventListener('click', WhichLink2WasClicked);
+                
+                function WhichLink1WasClicked(evt) {
+                    evt.preventDefault();
+                    let managerID = manager[0]._id;
+                    console.log(managerID+ " - clicked!");
+                    localStorage.setItem('sendManagerIdToAnotherPage', managerID);
+                    window.location.href = './oneManager.html';
+                }
+                
+                function WhichLink2WasClicked(evt) {
+                    evt.preventDefault();
+                    console.log(currntID+" clicked!")
+                    localStorage.setItem('sendDepIdToEmpsPage', currntID);
+                    window.location.href = './departmentEmployees.html';
+                }
+                
+                let deleteTD = `<input type='checkbox' onclick='deleteDepartment(this)' value="${currntID}">`;
+                console.log(deleteTD)
+                cell4.innerHTML = deleteTD;
+                
+                //   let updateTD = `<input type='radio' onclick='updateEmployee(this)' value="${currntID}" name="updating">`;
+                //   console.log(updateTD)
+                //   cell5.innerHTML = updateTD;
+            }
+        }
 
         async function deleteEmployee(data) {
             var title=document.getElementById("title");
@@ -277,5 +269,34 @@ async function getDepartmentsData() {
             }
         }
 
+        async function deleteDepartment(data) {
+            var title=document.getElementById("title");
+            
+            if(confirm("Are you sure you want to delete this Department from your DB? it will include delete all department’s employees & shifts data")==true) {
+            let currntID = data.value;
+            console.log("trying to delete: "+currntID);
+            fetch(depURL+'/' + currntID, {
+                method: 'DELETE',
+
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8' // Indicates the content 
+                },
+
+            }).then(function(response) { 
+                return response.json()}).then(function(data)
+                {
+                    console.log(data)
+                    title.innerHTML = "The Following department is successfuly deleted.";
+
+                })
+                .catch(error => {
+                    console.log('Something wrong, check again.')
+                    title.innerHTML = "Wrong data."
+                    console.error('Error:', error)
+                });
+            } else {
+                title.innerHTML = "Deleting department canceled!"
+            }
+        }
     </script>
 </html>
