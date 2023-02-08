@@ -21,6 +21,10 @@
                     <input type="text" id="department" required>
                 </div><br/>
                 <div>
+                    <label>Employee:</label>
+                    <input type="text" id="employeeFullName" required>
+                </div><br/>
+                <div>
                     <label>Shift Date:</label>
                     <input type="text" id="date" placeholder="(yyyy-mm-dd)" required>
                 </div><br/>
@@ -48,12 +52,21 @@
     <script>
         const url = 'http://localhost:8080/shifts';
         const depUrl = 'http://localhost:8080/departments';
+        const empUrl = 'http://localhost:8080/employees';
 
         async function returnPageButton() {
             window.location.href = './welcome.html';
         }
          
         async function addShift() {
+
+            const idEmpValue = localStorage.getItem('sendEmpIdToAddPage');
+            console.log(idEmpValue);
+
+            const respEmp = await fetch(empUrl+"/"+idEmpValue);
+            const dataEmp= await respEmp.json();
+
+            let empName = dataEmp[0].firstName+ " " +dataEmp[0].lastName;;
 
             const idValue = localStorage.getItem('sendDepIdToAddPage');
             console.log(idValue);
@@ -65,12 +78,14 @@
             var idid = document.getElementById('department').value = depName;
             console.log(idid)
 
+            var empFullName = document.getElementById('employeeFullName').value = empName;
+            console.log(empFullName)
+
             var form = document.getElementById('form');
 
             form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-
             var date=document.getElementById('date').value
             var startingHour=document.getElementById('startingHour').value
             var endingingHour=document.getElementById('endingHour').value
@@ -88,25 +103,66 @@
                 
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
-                }
-                
+                }     
 
             }).then(function(response) { 
                 return response.json()}).then(function(data)
                 {
                     console.log(data)
                     text = "The Following shift is successfuly posted, to department: " + idValue;
-                    console.log(text);
-                    location.reload();
+                    //location.reload();
+                    addEmpShift()
                 })
                 .catch(error => {
                     console.log('Wrong data.')
                     text = "Something wrong, check input again."
                     console.error(text + ' Error:', error)
                 });
-                title.innerHTML = text;  
             });
-        } 
+        }
+        
+        async function addEmpShift() {
+            
+            const idValue = localStorage.getItem('sendEmpIdToAddPage');
+            console.log(idValue);
+
+            const resp = await fetch(url+"/addEmp");
+            const data = await resp.json();
+
+            const respShift = await fetch(url);
+            const dataShift = await respShift.json();
+            //console.table(dataShift);
+            let numShifts=dataShift.length;
+            let newShiftID = dataShift[numShifts-1]._id;
+            //console.log(numShifts);
+            console.log("new shift with id: "+newShiftID);
+
+            fetch(url+'/addEmp', {
+                method: 'POST',
+                body: JSON.stringify({
+                    employeeID:idValue,
+                    shiftID:newShiftID
+                }),
+                
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                }
+                
+            }).then(function(response) { 
+                return response.json()}).then(function(data)
+                {
+                    localStorage.setItem('sendEmpIdToShiftsPage', idValue);
+                    window.location.href = './employeeShifts.html';
+                    console.log(data)
+                    text = "The Following shift is successfuly posted, to department: " + idValue;
+                    console.log(text);
+                })
+                .catch(error => {
+                    console.log('Wrong data.')
+                    text = "Something wrong, check input again."
+                    console.error(text + ' Error:', error)
+                });  
+        }
 
     </script>
 </html>
