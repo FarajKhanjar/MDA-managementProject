@@ -15,7 +15,10 @@
             </tr>
         </table>
         <br/>
-
+        <div>
+            <h3 id="title" style="color: darkblue;"></h3>
+        </div>
+        <br/>
         <table id="employeesTable" border="1" style="visibility:hidden; margin-left:auto;margin-right:auto; background-color:blanchedalmond;">
             <thead style="color:brown; font-weight: bold;">
                 <th id="nameOfemployee">First Name<br/></th>
@@ -23,8 +26,8 @@
                 <th id="startWorkYearOfemployee">Start work year<br/></th>
                 <th id="department">Department<br/></th>
                 <th id="shiftsNum">Shifts Number<br/></th>
-                <!-- <th id="deleteTD">Delete this employee<br/></th>
-                <th id="updateTD">Update this employee<br/></th> -->
+                <th id="deleteTD">Delete this employee<br/></th>
+                <!-- <th id="updateTD">Update this employee<br/></th> -->
                 </tr>
             </thead>
             <tbody id="employeesData" style="text-align: center;"></tbody>
@@ -35,8 +38,8 @@
                 <th id="nameOfdepartment">Department Name<br/></th>
                 <th id="manager">Manager<br/></th>
                 <th id="employeesNum">Employees Number<br/></th>
-                <!-- <th id="deleteTD">Delete this employee<br/></th>
-                <th id="updateTD">Update this employee<br/></th> -->
+                <!-- <th id="deleteTD">Delete this employee<br/></th> -->
+                <!-- <th id="updateTD">Update this employee<br/></th> -->
                 </tr>
             </thead>
             <tbody id="departmentsData" style="text-align: center;"></tbody>
@@ -48,6 +51,8 @@
         const depURL = 'http://localhost:8080/departments';
         
         async function clearPage() {
+
+            title.innerHTML="";
 
             var tableData = document.getElementById("employeesData");
             tableData.innerHTML="";
@@ -73,126 +78,90 @@
             //obj.style.visibility = 'hidden';
             obj.disabled = true;
 
-            
-            // document.getElementById("hideDataButton").disabled = true;
-            // document.getElementById("getDataButton").disabled = false;
-            
-            // var tableData = document.getElementById("marvelMovies");
-            // tableData.innerHTML="";
-
-           // title.innerHTML="";
-            //hideData();
-
-            // var form = document.getElementById('form');
-            // form.reset();
-
-            // var obj = document.getElementById('AddToData')
-            // obj.style.visibility = 'hidden'
-            // obj.style.display = 'none'
-
-            // var obj = document.getElementById('searchingByIdTable')
-            // obj.style.visibility = 'hidden'
-            // obj.style.display = 'none'
-
-            // var obj = document.getElementById('searchingByDirectorTable')
-            // obj.style.visibility = 'hidden'
-            // obj.style.display = 'none'
-
-            // var obj = document.getElementById('updateData')
-            // obj.style.visibility = 'hidden'
-            // obj.style.display = 'none'
-
         }
 
         async function getEmployeesData() {
     
             clearPage();
-
-    // const accessToken = sessionStorage['accessToken'];
-    // const empResp = await fetch(empURL, {
-    //     headers: {'x-access-token': accessToken},
-    // });
-
-    var obj = document.getElementById('mainPageButton')
-    //obj.style.visibility = 'visible';
-    obj.disabled = false;
-
-    var obj = document.getElementById('employeesDataButton')
-    //obj.style.visibility = 'hidden';
-    obj.disabled = true;
-
-    var obj = document.getElementById('employeesTable')
-    obj.style.visibility = 'visible';
-
-    const empResp = await fetch(empURL);
-    const empData = await empResp.json();
-    console.table(empData);
+            // const accessToken = sessionStorage['accessToken'];
+            // const empResp = await fetch(empURL, {
+            //     headers: {'x-access-token': accessToken},
+            // });
 
 
-    for (i = empData.length-1; i >= 0; i--) {
-      let currntID = empData[i]._id;
-      let firstName = empData[i].firstName;
-      let lastName = empData[i].lastName;
-      let startWorkYear = empData[i].startWorkYear;
 
-      let department = empData[i].department;
-      let depName = department[0].name;
+            var obj = document.getElementById('mainPageButton')
+            //obj.style.visibility = 'visible';
+            obj.disabled = false;
+            
+            var obj = document.getElementById('employeesDataButton')
+            //obj.style.visibility = 'hidden';
+            obj.disabled = true;
+            
+            var obj = document.getElementById('employeesTable')
+            obj.style.visibility = 'visible';
+            
+            const empResp = await fetch(empURL);
+            const empData = await empResp.json();
+            console.table(empData);
+            
+            for (i = empData.length-1; i >= 0; i--) {
+                let currntID = empData[i]._id;
+                let firstName = empData[i].firstName;
+                let lastName = empData[i].lastName;
+                let startWorkYear = empData[i].startWorkYear;
+                
+                let department = empData[i].department;
+                let depName = department[0].name;
+                
+                let shifts = empData[i].shifts;
+                let shiftsNum = shifts.length;
 
-      let shifts = empData[i].shifts;
-      let shiftsNum = shifts.length;
-
-      var tableRow = document.getElementById("employeesData");
-      var row = tableRow.insertRow(0);
-      var cell1 = row.insertCell(0);
-      var cell2 = row.insertCell(1);
-      var cell3 = row.insertCell(2);
-      var cell4 = row.insertCell(3);
-      var cell5 = row.insertCell(4);
-    //   var cell4 = row.insertCell(3);
-    //   var cell5 = row.insertCell(4); 
-      cell1.innerHTML = firstName;
-      cell2.innerHTML = lastName;
-      cell3.innerHTML = startWorkYear;
-      cell4.innerHTML = `<a id='goToDepPage' href='./oneDepartment.html'>${depName}</a>`;;
-      cell5.innerHTML = `<a id='goToShiftsPage' href='./employeeShifts.html'>${shiftsNum}</a>`;
+                var tableRow = document.getElementById("employeesData");
+                var row = tableRow.insertRow(0);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                var cell5 = row.insertCell(4);
+                var cell6 = row.insertCell(5);
+                //var cell7 = row.insertCell(6); 
+                cell1.innerHTML = firstName;
+                cell2.innerHTML = lastName;
+                cell3.innerHTML = startWorkYear;
+                cell4.innerHTML = `<a id='goToDepPage' href='./oneDepartment.html'>${depName}</a>`;;
+                cell5.innerHTML = `<a id='goToShiftsPage' href='./employeeShifts.html'>${shiftsNum}</a>`;
       
-      var link_1 = document.getElementById("goToDepPage");
-      link_1.addEventListener('click', WhichLink1WasClicked);
+                var link_1 = document.getElementById("goToDepPage");
+                link_1.addEventListener('click', WhichLink1WasClicked);
 
-      var link_2 = document.getElementById("goToShiftsPage");
-      link_2.addEventListener('click', WhichLink2WasClicked);
+                var link_2 = document.getElementById("goToShiftsPage");
+                link_2.addEventListener('click', WhichLink2WasClicked);
       
-      function WhichLink1WasClicked(evt) {
-        evt.preventDefault();
-        let depID = department[0]._id;
-        console.log("clicked!")
-        console.log(depID)
-        localStorage.setItem('sendDepIdToAnotherPage', depID);
-        window.location.href = './oneDepartment.html';
-    }
-
-    function WhichLink2WasClicked(evt) {
-        evt.preventDefault();
-        console.log(currntID+ " - clicked!")
-        localStorage.setItem('sendEmpIdToShiftsPage', currntID);
-        window.location.href = './employeeShifts.html';
-    }
-
-}
-
-    //   let deleteTD = `<input type='checkbox' onclick='deleteEmployee(this)' value="${currntID}">`;
-    //   console.log(deleteTD)
-    //   cell4.innerHTML = deleteTD;
-
-    //   let updateTD = `<input type='radio' onclick='updateEmployee(this)' value="${currntID}" name="updating">`;
-    //   console.log(updateTD)
-    //   cell5.innerHTML = updateTD;
-      
-  
-
-//   document.getElementById("hideDataButton").disabled = false;
-//   document.getElementById("getDataButton").disabled = true;
-}
+                function WhichLink1WasClicked(evt) {
+                    evt.preventDefault();
+                    let depID = department[0]._id;
+                    console.log(depID+ " - clicked!")
+                    localStorage.setItem('sendDepIdToAnotherPage', depID);
+                    window.location.href = './oneDepartment.html';
+                }
+                
+                function WhichLink2WasClicked(evt) {
+                    evt.preventDefault();
+                    console.log(currntID+ " - clicked!")
+                    localStorage.setItem('sendEmpIdToShiftsPage', currntID);
+                    window.location.href = './employeeShifts.html';
+                }
+                
+                let deleteTD = `<input type='checkbox' onclick='deleteEmployee(this)' value="${currntID}">`;
+                console.log(deleteTD)
+                cell6.innerHTML = deleteTD;
+                
+                //   let updateTD = `<input type='radio' onclick='updateEmployee(this)' value="${currntID}" name="updating">`;
+                //   console.log(updateTD)
+                //   cell5.innerHTML = updateTD;
+            }
+        }
     
 async function getDepartmentsData() {
     
@@ -276,6 +245,37 @@ async function getDepartmentsData() {
 //   document.getElementById("hideDataButton").disabled = false;
 //   document.getElementById("getDataButton").disabled = true;
 
-}    
+}
+
+        async function deleteEmployee(data) {
+            var title=document.getElementById("title");
+            
+            if(confirm("Are you sure you want to delete this Employee from your DB?")==true) {
+            let currntID = data.value;
+            console.log("trying to delete: "+currntID);
+            fetch(empURL+'/' + currntID, {
+                method: 'DELETE',
+
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8' // Indicates the content 
+                },
+
+            }).then(function(response) { 
+                return response.json()}).then(function(data)
+                {
+                    console.log(data)
+                    title.innerHTML = "The Following employee is successfuly deleted.";
+
+                })
+                .catch(error => {
+                    console.log('Something wrong, check again.')
+                    title.innerHTML = "Wrong data."
+                    console.error('Error:', error)
+                });
+            } else {
+                title.innerHTML = "Deleting employee canceled!"
+            }
+        }
+
     </script>
 </html>
