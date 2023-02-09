@@ -13,6 +13,11 @@
                     <button onclick="clearPage()" id="mainPageButton" disabled>Main Page</button>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <button onclick="addEmployee()" id="addEmployee" title="click to add" style="visibility: hidden;">Add Employee</button>
+                </td>
+            </tr>
         </table>
         <br/>
         <div>
@@ -88,6 +93,9 @@
             //     headers: {'x-access-token': accessToken},
             // });
 
+            var addEmployeeButton = document.getElementById("addEmployee");
+            addEmployeeButton.style.visibility = 'visible';
+            
             var obj = document.getElementById('mainPageButton')
             //obj.style.visibility = 'visible';
             obj.disabled = false;
@@ -298,5 +306,18 @@
                 title.innerHTML = "Deleting department canceled!"
             }
         }
+        async function addEmployee() {
+            
+            //const idValue = localStorage.getItem('sendEmpIdToShiftsPage');
+            //console.log(idValue);  
+    // const resp = await fetch(url+"/"+idValue);
+    // const data = await resp.json();
+    //     let departmenID = data[0].department[0]._id; 
+    //     console.log(departmenID);
+
+        // localStorage.setItem('sendDepIdToAddPage', departmenID);
+        // localStorage.setItem('sendEmpIdToAddPage', idValue);
+        window.location.href = './addEmployee.html';
+    }
     </script>
 </html>

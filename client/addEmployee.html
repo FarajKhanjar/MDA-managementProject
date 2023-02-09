@@ -1,0 +1,120 @@
+<html style="background-color: whitesmoke;">
+    <body onload="addEmployee()">
+        <h1 style="text-align: center; color:crimson">New employee form</h1>
+        <table id="menuTable" style="margin-left:auto;margin-right:auto;">
+            <tr>
+                <td>
+                    <button onclick="returnPageButton()" id="mainPageButton">Return Main Page</button>
+                </td>
+            </tr>
+        </table>
+
+        <div>
+            <h3 id="title" style="color: darkblue;"></h3>
+        </div>
+
+        <div id="AddToData">
+            <h3>Please fill data in the form below:</h3>
+            <form id="form" method="POST">
+                <div>
+                    <label>First name:</label>
+                    <input type="text" id="firstName" placeholder="enter firstname" required>
+                </div><br/>
+
+                <div>
+                    <label>Last name:</label>
+                    <input type="text" id="lastName" placeholder="enter lastname" required>
+                </div><br/>
+
+                <div>
+                    <label>Start work year:</label>
+                    <input type="text" id="startWorkYear" placeholder="(yyyy)" required>
+                </div><br/>
+                <div>
+                    <label>Department ID:</label>
+                    <input type="text" id="departmentID" placeholder="(ID)" required>
+                </div><br/>
+         
+                <div>
+                    <input type="submit" value="Add to data"/>
+                    <input type="reset" value="Reset"/>
+                    <input id="returnButton" type="button" value="Return" onclick="returnPageButton()"/>
+                </div>
+
+            </form>
+        </div>
+    </body>
+    
+    <script>
+        //const depUrl = 'http://localhost:8080/departments';
+        const empUrl = 'http://localhost:8080/employees';
+
+        async function returnPageButton() {
+            window.location.href = './welcome.html';
+        }
+         
+        async function addEmployee() {
+
+            // const idEmpValue = localStorage.getItem('sendEmpIdToAddPage');
+            // console.log(idEmpValue);
+
+            // const respEmp = await fetch(empUrl+"/"+idEmpValue);
+            // const dataEmp= await respEmp.json();
+
+            // let empName = dataEmp[0].firstName+ " " +dataEmp[0].lastName;;
+
+            // const idValue = localStorage.getItem('sendDepIdToAddPage');
+            // console.log(idValue);
+
+            // const resp = await fetch(depUrl+"/"+idValue);
+            // const data = await resp.json();
+            // let depName = data[0].name;
+
+            // var idid = document.getElementById('department').value = depName;
+            // console.log(idid)
+
+            // var empFullName = document.getElementById('employeeFullName').value = empName;
+            // console.log(empFullName)
+
+            var form = document.getElementById('form');
+
+            form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            var firstName=document.getElementById('firstName').value
+            var lastName=document.getElementById('lastName').value
+            var startWorkYear=document.getElementById('startWorkYear').value
+            var departmentID=document.getElementById('departmentID').value
+            var title=document.getElementById("title")
+            let text= "";
+
+            fetch(empUrl+'/', {
+                method: 'POST',
+                body: JSON.stringify({
+                    firstName:firstName,
+                    lastName:lastName,
+                    startWorkYear:startWorkYear,
+                    departmentID:departmentID
+                }),
+                
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                }     
+
+            }).then(function(response) { 
+                return response.json()}).then(function(data)
+                {
+                    console.log(data)
+                    text = "The Following employee is successfuly posted, to department: " + departmentID;
+                    //location.reload();
+                })
+                .catch(error => {
+                    console.log('Wrong data.')
+                    text = "Something wrong, check input again."
+                    console.error(text + ' Error:', error)
+                });
+            });
+        }
+
+    </script>
+</html>
