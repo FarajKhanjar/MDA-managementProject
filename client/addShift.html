@@ -26,7 +26,7 @@
                 </div><br/>
                 <div>
                     <label>Shift Date:</label>
-                    <input type="text" id="date" placeholder="(yyyy-mm-dd)" required>
+                    <input type="datetime" id="dateForm" placeholder="(yyyy-mm-dd)" required>
                 </div><br/>
 
                 <div>
@@ -83,21 +83,52 @@
 
             var form = document.getElementById('form');
 
+            const respShifts = await fetch(url);
+            const dataShifts = await respShifts.json();
+            console.table(dataShifts);
+
             form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            var date=document.getElementById('date').value
-            var startingHour=document.getElementById('startingHour').value
-            var endingingHour=document.getElementById('endingHour').value
+            var newDate=document.getElementById('dateForm').value
+            var newStartingHour=document.getElementById('startingHour').value
+            var newEndingHour=document.getElementById('endingHour').value
             var title=document.getElementById("title")
             let text= "";
+            let idShiftExisted = "";
 
+            for (i = dataShifts.length-1; i >= 0; i--) {
+                console.log(i);
+                var date = dataShifts[i].date.slice(0, 10);
+                let startingHour = dataShifts[i].startingHour;
+                let endingHour = dataShifts[i].endingHour;
+                let department = dataShifts[i].department;
+
+                console.log(date +"-" +newDate);
+                console.log(startingHour +"-" +newStartingHour);
+                console.log(endingHour +"-" +newEndingHour);
+                console.log(department[0]._id +"-" +idValue);
+                
+                if(date == newDate && startingHour == newStartingHour &&
+                endingHour == newEndingHour && department[0]._id == idValue) {
+                    console.log("its existes! "+dataShifts[i]._id);
+                    idShiftExisted =  dataShifts[i]._id;
+                    break;
+                }                
+            }
+ 
+            console.log(idShiftExisted);
+            if(idShiftExisted) {
+                console.log("Shift already exists in DB, Add only in empShift table: shift-"+idShiftExisted+" employee-"+idEmpValue);
+                addEmpShift(idShiftExisted);
+            } 
+            else {
             fetch(url+'/', {
                 method: 'POST',
                 body: JSON.stringify({
-                    date:date,
-                    startingHour:startingHour,
-                    endingHour:endingingHour,
+                    date:newDate,
+                    startingHour:newStartingHour,
+                    endingHour:newEndingHour,
                     department:idValue
                 }),
                 
@@ -111,17 +142,18 @@
                     console.log(data)
                     text = "The Following shift is successfuly posted, to department: " + idValue;
                     //location.reload();
-                    addEmpShift()
+                    addEmpShift(idShiftExisted);
                 })
                 .catch(error => {
                     console.log('Wrong data.')
                     text = "Something wrong, check input again."
                     console.error(text + ' Error:', error)
                 });
+            }
             });
         }
         
-        async function addEmpShift() {
+        async function addEmpShift(idShiftExisted) {
             
             const idValue = localStorage.getItem('sendEmpIdToAddPage');
             console.log(idValue);
@@ -133,7 +165,14 @@
             const dataShift = await respShift.json();
             //console.table(dataShift);
             let numShifts=dataShift.length;
-            let newShiftID = dataShift[numShifts-1]._id;
+            console.log("idShiftExisted="+idShiftExisted)
+            let newShiftID;
+            if(!idShiftExisted) {
+                newShiftID = dataShift[numShifts-1]._id;
+            }
+            else {
+                newShiftID = idShiftExisted;
+            }
             //console.log(numShifts);
             console.log("new shift with id: "+newShiftID);
 
