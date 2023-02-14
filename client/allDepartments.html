@@ -21,7 +21,7 @@
                 <th id="manager">Manager<br/></th>
                 <th id="employeesNum">Employees Number<br/></th>
                 <th id="deleteTD">Delete this department<br/></th>
-                <!-- <th id="updateTD">Update this employee<br/></th> -->
+                <th id="updateTD">Update this department<br/></th>
                 </tr>
             </thead>
             <tbody id="departmentsData" style="text-align: center;"></tbody>
@@ -61,6 +61,7 @@
                 var cell2 = row.insertCell(1);
                 var cell3 = row.insertCell(2);
                 var cell4 = row.insertCell(3);
+                var cell5 = row.insertCell(4);
                 
                 cell1.innerHTML = depName;
                 cell2.innerHTML = `<a id='goToManagerPage' href='./oneManager.html'>${managerName}</a>`;;
@@ -91,9 +92,9 @@
                 console.log(deleteTD)
                 cell4.innerHTML = deleteTD;
                 
-                //   let updateTD = `<input type='radio' onclick='updateEmployee(this)' value="${currntID}" name="updating">`;
-                //   console.log(updateTD)
-                //   cell5.innerHTML = updateTD;
+                let updateTD = `<input type='radio' onclick='updateDepartment(this)' value="${currntID}" name="updating">`;
+                console.log(updateTD)
+                cell5.innerHTML = updateTD;
             }
         }
 
@@ -130,6 +131,13 @@
         async function addDepartment() {
 
             window.location.href = './addDepartment.html';
+        }
+
+        async function updateDepartment(data) {
+            let currntID = data.value;
+            console.log(currntID);
+            localStorage.setItem('senddepIdToUpdatedepPage', currntID);
+            window.location.href = './updateDepartment.html';
         }
 
     </script>

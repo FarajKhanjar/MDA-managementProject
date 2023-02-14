@@ -1,0 +1,103 @@
+<html style="background-color: whitesmoke;">
+    <body onload="updateDepartment()">
+        <h1 style="text-align: center; color:crimson">Update department form</h1>
+        <table id="menuTable" style="margin-left:auto;margin-right:auto;">
+            <tr>
+                <td>
+                    <button onclick="returnPageButton()" id="mainPageButton">Return Main Page</button>
+                </td>
+            </tr>
+        </table>
+
+        <div>
+            <h3 id="title" style="color: darkblue;"></h3>
+        </div>
+
+        <div id="AddToData">
+            <h3>Please update data in the form below:</h3>
+            <form id="form" method="PUT">
+                <div>
+                    <label>Department name:</label>
+                    <input type="text" id="name" title="update this name">
+                </div><br/>
+
+                <div> Department Manager: 
+                    <input type="text" id="managerID" title="cant change department manager" disabled>
+                </div><br/>
+                <div>
+                    <input type="submit" value="update data"/>
+                    <input type="reset" value="Reset"/>
+                    <input id="returnButton" type="button" value="Return" onclick="returnDepartmentsPage()"/>
+                </div>
+            </form>
+        </div>
+    </body>
+    
+    <script>
+        const depUrl = 'http://localhost:8080/departments';
+
+        async function returnPageButton() {
+            window.location.href = './welcome.html';
+        }
+
+        async function returnDepartmentsPage() {
+            window.location.href = './allDepartments.html';
+        }
+         
+        async function updateDepartment() {
+            
+            const currntID = localStorage.getItem('senddepIdToUpdatedepPage');
+            console.log(currntID);    
+
+            var title=document.getElementById("title")
+
+            var form = document.getElementById('form');
+            const resp = await fetch(depUrl+"/"+currntID);
+            const currntDepartment = await resp.json();
+            console.log(currntDepartment);
+            
+            document.getElementById('name').value = currntDepartment[0].name;
+            document.getElementById('managerID').value = currntDepartment[0].manager[0].firstName + " " + 
+                                                         currntDepartment[0].manager[0].lastName;
+            let manId = currntDepartment[0].manager[0]._id;
+            
+            form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (confirm("Are you sure you want to update this department?")) {
+
+            var name=document.getElementById('name').value
+            var mangerID=manId;
+
+            fetch(depUrl+'/' + currntID, {
+                method: 'PUT',
+
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8' // Indicates the content 
+                },
+
+                body: JSON.stringify({
+                    name:name,
+                    manager:mangerID
+                }),
+
+            }).then(function(response) { 
+                return response.json()}).then(function(data)
+                {
+                    console.log(data)
+                    title.innerHTML = "The Following department is successfuly updated: " + name;
+
+                })
+                .catch(error => {
+                    console.log('Error Data.')
+                    title.innerHTML = "Something wrong, check again."
+                    console.error('Error:', error)
+                });
+            } else {
+                title.innerHTML = "Update canceled!"
+            }
+            });
+        }
+
+    </script>
+</html>
