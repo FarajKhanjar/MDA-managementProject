@@ -1,0 +1,116 @@
+<html style="background-color: whitesmoke;">
+    <body onload="updateEmployee()">
+        <h1 style="text-align: center; color:crimson">New employee form</h1>
+        <table id="menuTable" style="margin-left:auto;margin-right:auto;">
+            <tr>
+                <td>
+                    <button onclick="returnPageButton()" id="mainPageButton">Return Main Page</button>
+                </td>
+            </tr>
+        </table>
+
+        <div>
+            <h3 id="title" style="color: darkblue;"></h3>
+        </div>
+
+        <div id="AddToData">
+            <h3>Please update data in the form below:</h3>
+            <form id="form" method="PUT">
+                <div>
+                    <label>First name:</label>
+                    <input type="text" id="firstName" title="update this firstname">
+                </div><br/>
+
+                <div>
+                    <label>Last name:</label>
+                    <input type="text" id="lastName" title="update this lastname">
+                </div><br/>
+                <div>
+                    <label>Start work year:</label>
+                    <input type="text" id="startWorkYear" title="update this startWorkYear">
+                </div><br/>
+                <div> Employee Department: 
+                    <input type="text" id="departmentID" title="cant change employee department" disabled>
+                </div><br/>
+                <div>
+                    <input type="submit" value="update data"/>
+                    <input type="reset" value="Reset"/>
+                    <input id="returnButton" type="button" value="Return" onclick="returnEmployeesPage()"/>
+                </div>
+            </form>
+        </div>
+    </body>
+    
+    <script>
+        const empUrl = 'http://localhost:8080/employees';
+
+        async function returnPageButton() {
+            window.location.href = './welcome.html';
+        }
+
+        async function returnEmployeesPage() {
+            window.location.href = './allEmployees.html';
+        }
+         
+        async function updateEmployee() {
+            
+            const currntID = localStorage.getItem('sendEmpIdToUpdateEmpPage');
+            console.log(currntID);    
+
+            var title=document.getElementById("title")
+
+            var form = document.getElementById('form');
+            const resp = await fetch(empUrl+"/"+currntID);
+            const currntEmployee = await resp.json();
+            console.log(currntEmployee);
+            
+            document.getElementById('firstName').value = currntEmployee[0].firstName;
+            document.getElementById('lastName').value = currntEmployee[0].lastName;
+            document.getElementById('startWorkYear').value = currntEmployee[0].startWorkYear;
+            document.getElementById('departmentID').value = currntEmployee[0].department[0].name;
+            let depId = currntEmployee[0].department[0]._id;
+            
+            form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (confirm("Are you sure you want to update this employee?")) {
+
+            var firstName=document.getElementById('firstName').value
+            var lastName=document.getElementById('lastName').value
+            var startWorkYear=document.getElementById('startWorkYear').value
+            var departmentID=depId;
+
+            fetch(empUrl+'/' + currntID, {
+                method: 'PUT',
+
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8' // Indicates the content 
+                },
+
+                body: JSON.stringify({
+                    firstName:firstName,
+                    lastName:lastName,
+                    startWorkYear:startWorkYear,
+                    departmentID:departmentID
+                }),
+
+            }).then(function(response) { 
+                return response.json()}).then(function(data)
+                {
+                    console.log(data)
+                    title.innerHTML = "The Following employee is successfuly updated: " + firstName;
+
+                })
+                .catch(error => {
+                    console.log('Error Data.')
+                    title.innerHTML = "Something wrong, check again."
+                    console.error('Error:', error)
+                });
+            } else {
+                title.innerHTML = "Update canceled!"
+            }
+            });
+        }
+
+    </script>
+</html>
