@@ -50,7 +50,7 @@
                 
                 let manager = depData[i].manager;
                 console.log(manager);
-                let managerName = manager[0].firstName+ " " +manager[0].lastName;
+                let managerName = manager[0]?.firstName+ " " +manager[0]?.lastName;
                 
                 let employees = depData[i].employees;
                 let employeesNum = employees.length;

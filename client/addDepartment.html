@@ -1,0 +1,201 @@
+<html style="background-color: whitesmoke;">
+    <body onload="addDepartment()">
+        <h1 style="text-align: center; color:crimson">Update department form</h1>
+        <table id="menuTable" style="margin-left:auto;margin-right:auto;">
+            <tr>
+                <td>
+                    <button onclick="returnPageButton()" id="mainPageButton">Return Main Page</button>
+                </td>
+            </tr>
+        </table>
+
+        <div>
+            <h3 id="title" style="color: darkblue;"></h3>
+        </div>
+
+        <div id="AddToData" style="visibility: visible;" disabled>
+            <h3>Please update data in the form below:</h3>
+            <form id="form" method="PUT">
+                <div>
+                    <label>Department name:</label>
+                    <input type="text" id="name" title="update this name">
+                </div><br/>
+                <div>
+                    <input type="submit" value="Continue to add manager"/>
+                    <input type="reset" value="Reset"/>
+                    <input id="returnButton" type="button" value="Return" onclick="returnDepartmentsPage()"/>
+                </div>
+            </form>
+        </div>
+
+        <div id="AddManager" style="visibility: hidden;">
+            <h3>Please fill new manager data in the form below:</h3>
+            <form id="managerForm" method="POST">
+                <div>
+                    <label>First name:</label>
+                    <input type="text" id="firstName" placeholder="enter firstname" required>
+                </div><br/>
+
+                <div>
+                    <label>Last name:</label>
+                    <input type="text" id="lastName" placeholder="enter lastname" required>
+                </div><br/>
+                <div>
+                    <label>Start work year:</label>
+                    <input type="text" id="startWorkYear" placeholder="(yyyy)" required>
+                </div><br/>
+                <p> Department name: 
+                    <input type = "text" id = "newDepartment" size = "20" >
+                    <label>Department ID:</label>
+                    <input type="text" id="departmentID" placeholder="(ID)" required>
+                </p><br/>
+                <div>
+                    <input type="submit" value="Add to data"/>
+                    <input type="reset" value="Reset"/>
+                    <input id="returnButton" type="button" value="Return" onclick="returnPageButton()"/>
+                </div>
+            </form>
+        </div>
+    </body>
+    
+    <script>
+        const depUrl = 'http://localhost:8080/departments';
+        const empUrl = 'http://localhost:8080/employees';
+
+        async function returnPageButton() {
+            window.location.href = './welcome.html';
+        }
+
+        async function returnDepartmentsPage() {
+            window.location.href = './allDepartments.html';
+        }
+         
+        async function addDepartment() {
+               
+            var title=document.getElementById("title")
+
+            var form = document.getElementById('form');
+                        
+            form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var name=document.getElementById('name').value
+
+            fetch(depUrl+'/', {
+                method: 'POST',
+
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8' // Indicates the content 
+                },
+
+                body: JSON.stringify({
+                    name:name
+                }),
+
+            }).then(function(response) { 
+                return response.json()}).then(function(data)
+                {
+                    console.log(data)
+                    continueAddManager(name);
+                    title.innerHTML = "Add manager to: "+name+" departmemt.";
+
+                })
+                .catch(error => {
+                    console.log('Wrong data.')
+                    title.innerHTML = "Something wrong, check input again."
+                    console.error('Error:', error)
+                });
+            });
+        }
+
+        async function continueAddManager(name) {
+
+            let depName = document.getElementById("newDepartment").value = name;
+            console.log(depName);
+
+            const resp = await fetch(depUrl+"/byName/"+depName);
+            const data = await resp.json();
+            let depID = data[0]._id;
+            console.log(depID)  
+            document.getElementById('departmentID').value = depID;
+
+            var obj = document.getElementById('AddToData');
+            obj.innerHTML = "";
+            var obj = document.getElementById('AddManager');
+            obj.style.visibility = 'visible';
+            var form = document.getElementById('managerForm');
+
+            form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            var firstName=document.getElementById('firstName').value
+            var lastName=document.getElementById('lastName').value
+            var startWorkYear=document.getElementById('startWorkYear').value
+            var departmentID=document.getElementById('departmentID').value
+
+            var title=document.getElementById("title")
+            let text= "";
+
+            fetch(empUrl+'/', {
+                method: 'POST',
+                body: JSON.stringify({
+                    firstName:firstName,
+                    lastName:lastName,
+                    startWorkYear:startWorkYear,
+                    departmentID:departmentID
+                }),
+                
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                }     
+
+            }).then(function(response) { 
+                return response.json()}).then(function(data)
+                {
+                    console.log(data)
+                    updateManagerInDepDB(departmentID);
+                    title.innerHTML = "The Following manager is successfuly posted, to department: " + departmentID;
+
+                })
+                .catch(error => {
+                    console.log('Wrong data.')
+                    title.innerHTML = "Something wrong, check input again."
+                    console.error('Error:', error)
+                });
+            });
+        }
+
+        async function updateManagerInDepDB(departmentID) {
+
+            const respEmp = await fetch(empUrl);
+            const dataEmp = await respEmp.json();
+
+            let numEmployees=dataEmp.length;
+            newManagerID = dataEmp[numEmployees-1]._id;
+            console.log("newManagerID= "+newManagerID);
+
+            fetch(depUrl+'/' + departmentID, {
+                method: 'PUT',
+
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8' // Indicates the content 
+                },
+
+                body: JSON.stringify({
+                    manager:newManagerID
+                }),
+
+            }).then(function(response) { 
+                return response.json()}).then(function(data)
+                {
+                    console.log(data+" managerId in depDB.")
+                })
+                .catch(error => {
+                    console.log('Error Data.')
+                    title.innerHTML = "Something wrong, check again."
+                    console.error('Error:', error)
+                });
+        }
+
+    </script>
+</html>
