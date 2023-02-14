@@ -77,6 +77,45 @@ const getDepartmentById = (id) => {
   ]);
 };
 
+// GET - Get By depName - read
+const getDepartmentByName = (depName) => {
+  return Department.aggregate([
+    { 
+      $lookup :
+      {
+        from: "employees",
+        localField: "manager",
+        foreignField: "_id",
+        pipeline: [
+          {
+            $project : { "departmentID": 0 }
+          }
+        ],
+        as: "manager"
+      } 
+    },
+    { 
+      $lookup :
+      {
+        from: "employees",
+        localField: "_id",
+        foreignField: "departmentID",
+        pipeline: [
+          {
+            $project : { "departmentID": 0}
+          }
+        ],
+        as: "employees"
+      } 
+    } 
+    , {
+      $match : {
+        name : depName
+      }
+    }
+  ]);
+};
+
 // GET - Get By Manager - read & filter
 const getDepartmentByManager = (manager) => {
   console.log(manager)
@@ -142,6 +181,7 @@ const deleteDepartment = async (id) => {
 module.exports = {
   getAllDepartments,
   getDepartmentById,
+  getDepartmentByName,
   getDepartmentByManager,
   addDepartment,
   updateDepartment,

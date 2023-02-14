@@ -25,28 +25,31 @@
                     <label>Last name:</label>
                     <input type="text" id="lastName" placeholder="enter lastname" required>
                 </div><br/>
-
                 <div>
                     <label>Start work year:</label>
                     <input type="text" id="startWorkYear" placeholder="(yyyy)" required>
                 </div><br/>
                 <div>
+                    <label>Employee Department:</label>
+                    <select id = "myList" onchange = "depsList()">
+                    </select>
+                </div>
+                <p> Your selected department is: 
+                    <input type = "text" id = "departmentChosen" size = "20" >
                     <label>Department ID:</label>
                     <input type="text" id="departmentID" placeholder="(ID)" required>
-                </div><br/>
-         
+                </p><br/>
                 <div>
                     <input type="submit" value="Add to data"/>
                     <input type="reset" value="Reset"/>
                     <input id="returnButton" type="button" value="Return" onclick="returnPageButton()"/>
                 </div>
-
             </form>
         </div>
     </body>
     
     <script>
-        //const depUrl = 'http://localhost:8080/departments';
+        const depUrl = 'http://localhost:8080/departments';
         const empUrl = 'http://localhost:8080/employees';
 
         async function returnPageButton() {
@@ -54,27 +57,8 @@
         }
          
         async function addEmployee() {
-
-            // const idEmpValue = localStorage.getItem('sendEmpIdToAddPage');
-            // console.log(idEmpValue);
-
-            // const respEmp = await fetch(empUrl+"/"+idEmpValue);
-            // const dataEmp= await respEmp.json();
-
-            // let empName = dataEmp[0].firstName+ " " +dataEmp[0].lastName;;
-
-            // const idValue = localStorage.getItem('sendDepIdToAddPage');
-            // console.log(idValue);
-
-            // const resp = await fetch(depUrl+"/"+idValue);
-            // const data = await resp.json();
-            // let depName = data[0].name;
-
-            // var idid = document.getElementById('department').value = depName;
-            // console.log(idid)
-
-            // var empFullName = document.getElementById('employeeFullName').value = empName;
-            // console.log(empFullName)
+            
+            depsList();
 
             var form = document.getElementById('form');
 
@@ -85,6 +69,7 @@
             var lastName=document.getElementById('lastName').value
             var startWorkYear=document.getElementById('startWorkYear').value
             var departmentID=document.getElementById('departmentID').value
+
             var title=document.getElementById("title")
             let text= "";
 
@@ -105,15 +90,48 @@
                 return response.json()}).then(function(data)
                 {
                     console.log(data)
-                    text = "The Following employee is successfuly posted, to department: " + departmentID;
-                    //location.reload();
+                    title.innerHTML = "The Following employee is successfuly posted, to department: " + departmentID;
+
                 })
                 .catch(error => {
                     console.log('Wrong data.')
-                    text = "Something wrong, check input again."
-                    console.error(text + ' Error:', error)
+                    title.innerHTML = "Something wrong, check input again."
+                    console.error('Error:', error)
                 });
             });
+        }
+
+        async function depsList() {
+            const depResp = await fetch(depUrl);
+            const depData = await depResp.json();
+            console.table(depData);
+
+            var mylist = document.getElementById("myList");
+            var list1 = "<select id = "+myList+" onchange = "+depValue()+">";
+            var list2 = "</select>";
+            var option1 = "<option> ---Choose department--- </option>";
+            var option2 = "";
+
+            for (i = depData.length-1; i >= 0; i--) {
+                 option2 = option2 + ("<option> "+depData[i].name+" </option>");                
+            }
+            console.log(list1+option1+option2+list2);
+            mylist.innerHTML = list1+option1+option2+list2;
+
+        }
+
+        async function depValue() {
+            var mylist = document.getElementById("myList");
+
+            let depName = document.getElementById("departmentChosen").value = mylist.options[mylist.selectedIndex].text;
+            console.log(depName);
+
+            const resp = await fetch(depUrl+"/byName/"+depName);
+            const data = await resp.json();
+            let depID = data[0]._id;
+            console.log(depID)
+            
+            document.getElementById('departmentID').value = depID;
         }
 
     </script>

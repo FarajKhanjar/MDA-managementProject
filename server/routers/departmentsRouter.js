@@ -31,6 +31,18 @@ router.route('/:id').get(async (req, res) => {
   
 });
 
+// Get department By name
+router.route('/byName/:name').get(async (req, res) => {
+  try {
+    const { name } = req.params;
+  const department = await departmentsBLL.getDepartmentByName(name);
+  res.json(department);
+  } catch (error) {
+    res.json(error);
+  }
+  
+});
+
 // Get department By manager
 router.route('/byManager/:manager').get(async (req, res) => {
   try {
