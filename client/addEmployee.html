@@ -42,7 +42,7 @@
                 <div>
                     <input type="submit" value="Add to data"/>
                     <input type="reset" value="Reset"/>
-                    <input id="returnButton" type="button" value="Return" onclick="returnPageButton()"/>
+                    <input id="returnButton" type="button" value="Return" onclick="returnEmployeesPage()"/>
                 </div>
             </form>
         </div>
@@ -54,6 +54,10 @@
 
         async function returnPageButton() {
             window.location.href = './welcome.html';
+        }
+
+        async function returnEmployeesPage() {
+            window.location.href = './allEmployees.html';
         }
          
         async function addEmployee() {
@@ -123,12 +127,12 @@
         async function depValue() {
             var mylist = document.getElementById("myList");
 
-            let depName = document.getElementById("departmentChosen").value = mylist.options[mylist.selectedIndex].text;
+            let depName = document.getElementById("departmentChosen").value = mylist.options[mylist.selectedIndex]?.text;
             console.log(depName);
 
             const resp = await fetch(depUrl+"/byName/"+depName);
             const data = await resp.json();
-            let depID = data[0]._id;
+            let depID = data[0]?._id;
             console.log(depID)
             
             document.getElementById('departmentID').value = depID;

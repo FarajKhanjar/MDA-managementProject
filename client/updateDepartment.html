@@ -21,9 +21,19 @@
                     <input type="text" id="name" title="update this name">
                 </div><br/>
 
-                <div> Department Manager: 
-                    <input type="text" id="managerID" title="cant change department manager" disabled>
+                <div>Current department manager:
+                    <input type="text" id="managerID" title="current manager" disabled> 
                 </div><br/>
+                <div>   
+                    <label>New manager from department employees list:</label>
+                    <select id = "myList" onchange = "employeesDepList()">
+                    </select>
+                </div>
+                <p> Your selected manager is: 
+                    <input type = "text" id = "managerChosen" size = "20" >
+                    <label>Manager ID:</label>
+                    <input type="text" id="managerChosenID" placeholder="(ID)" required>
+                </p><br/>
                 <div>
                     <input type="submit" value="update data"/>
                     <input type="reset" value="Reset"/>
@@ -35,6 +45,7 @@
     
     <script>
         const depUrl = 'http://localhost:8080/departments';
+        const empUrl = 'http://localhost:8080/employees';
 
         async function returnPageButton() {
             window.location.href = './welcome.html';
@@ -47,7 +58,9 @@
         async function updateDepartment() {
             
             const currntID = localStorage.getItem('senddepIdToUpdatedepPage');
-            console.log(currntID);    
+            console.log(currntID); 
+
+            employeesDepList();
 
             var title=document.getElementById("title")
 
@@ -59,7 +72,6 @@
             document.getElementById('name').value = currntDepartment[0].name;
             document.getElementById('managerID').value = currntDepartment[0].manager[0].firstName + " " + 
                                                          currntDepartment[0].manager[0].lastName;
-            let manId = currntDepartment[0].manager[0]._id;
             
             form.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -67,7 +79,7 @@
             if (confirm("Are you sure you want to update this department?")) {
 
             var name=document.getElementById('name').value
-            var mangerID=manId;
+            var mangerId=document.getElementById('managerChosenID').value;
 
             fetch(depUrl+'/' + currntID, {
                 method: 'PUT',
@@ -78,7 +90,7 @@
 
                 body: JSON.stringify({
                     name:name,
-                    manager:mangerID
+                    manager:mangerId
                 }),
 
             }).then(function(response) { 
@@ -97,6 +109,43 @@
                 title.innerHTML = "Update canceled!"
             }
             });
+        }
+
+        async function employeesDepList() {
+
+            const currntID = localStorage.getItem('senddepIdToUpdatedepPage');
+            console.log(currntID); 
+
+            const empResp = await fetch(empUrl+"/byDep/"+currntID);
+            const empData = await empResp.json();
+            console.table(empData);
+
+            var mylist = document.getElementById("myList");
+            var list1 = "<select id = "+myList+" onchange = "+managerValue(myList.selectedIndex,empData)+">";
+            var list2 = "</select>";
+            var option1 = "<option> ---Choose Manager--- </option>";
+            var option2 = "";
+
+            for (i = empData.length-1; i >= 0; i--) {
+                 option2 = option2 + ("<option> "+empData[i].firstName+" "+empData[i].lastName+" </option>");                
+            }
+            console.log(list1+option1+option2+list2);
+            mylist.innerHTML = list1+option1+option2+list2;
+
+        }
+
+        async function managerValue(selectedIndex,empData) {
+            console.log(selectedIndex);
+            console.log(empData.length);
+            var mylist = document.getElementById("myList");
+            console.log(mylist.value);
+            let manName = document.getElementById("managerChosen").value = mylist.options[mylist.selectedIndex]?.text;
+            console.log(manName);
+
+            let manID = empData[empData.length-selectedIndex]?._id;
+            console.log(manID)
+            
+            document.getElementById('managerChosenID').value = manID;
         }
 
     </script>
