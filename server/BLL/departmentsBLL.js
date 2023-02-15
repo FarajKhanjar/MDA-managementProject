@@ -1,6 +1,7 @@
 const Department = require('../models/departmentModel');
 const Employee = require('../models/employeeModel');
 const Shift = require('../models/shiftModel');
+const EmployeeShift = require('../models/employeeShiftModel');
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -172,11 +173,20 @@ const updateDepartment = async (id, obj) => {
 // DELETE - Delete
 const deleteDepartment = async (id) => {
   await Department.findByIdAndDelete(id);
+  getEmployeesByDepartment(id);
   await Employee.deleteMany({ departmentID: id });
   await Shift.deleteMany({ department: id });
   return 'Deleted!';
 
 };
+
+async function getEmployeesByDepartment(departmentId) {
+  const emps = await Employee.find({ departmentID: departmentId });
+  for (let i = 0; i < emps.length; i++) {
+    const employeeId = emps[i]._id;
+    await EmployeeShift.deleteMany({ employeeID: employeeId });
+  }
+}
 
 module.exports = {
   getAllDepartments,
